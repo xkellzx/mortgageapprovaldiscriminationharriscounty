@@ -1,0 +1,174 @@
+---
+title: "datathonbeginnertrack"
+author: "Kelly Zeng"
+date: "1/28/2022"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r, echo = TRUE}
+# Total People
+total <- dim(track)[1]
+
+# Females
+females <- subset(track, track$sex=="Female")
+total_female <- dim(females)[1]
+
+# Males 
+males <- subset(track, track$sex=="Male")
+total_male <- dim(males)[1]
+
+# Joint
+joint <- subset(track, track$sex=="Joint")
+total_joint <- dim(joint)[1]
+
+# Race (white, black or african american, asian, native hawaiian or other, american indian or alaska native, joint)
+white_hisp <- subset(track, track$race=="White" & track$ethnicity=="Hispanic or Latino")
+total_white_hisp <- dim(white_hisp)[1]
+white_nothisp <- subset(track, track$race=="White" & track$ethnicity=="Not Hispanic or Latino")
+total_white_nothisp <- dim(white_nothisp)[1]
+black <- subset(track, track$race=="Black or African American")
+total_black <- dim(black)[1]
+asian <- subset(track, track$race=="Asian")
+total_asian <- dim(asian)[1]
+hawaii <- subset(track, track$race=="Native Hawaiian or Other Pacific Islander")
+total_hawaii <- dim(hawaii)[1]
+native <- subset(track, track$race=="American Indian or Alaska Native")
+total_native <- dim(native)[1]
+```
+
+
+```{r, echo = TRUE}
+# Sex
+
+## Not Accepted Subset
+not_accepted <- subset(track, track$accepted==0)
+total_not <-dim(not_accepted)[1] 
+male_not <- not_accepted[not_accepted$sex=="Male",]
+total_male_not <- dim(male_not)[1]
+female_not <- not_accepted[not_accepted$sex=="Female",]
+total_female_not <- dim(female_not)[1]
+joint_not <- not_accepted[not_accepted$sex=="Joint",]
+total_joint_not <- dim(joint_not)[1]
+
+## Accepted Subset
+accepted <- subset(track, track$accepted==1)
+total_acp <-dim(accepted)[1] 
+male_acp <- accepted[accepted$sex=="Male",]
+total_male_acp <- dim(male_acp)[1]
+female_acp <- accepted[accepted$sex=="Female",]
+total_female_acp <- dim(female_acp)[1]
+joint_acp <- accepted[accepted$sex=="Joint",]
+total_joint_acp <- dim(joint_acp)[1]
+
+```
+
+```{r, echo = TRUE}
+df_sex <- data.frame(Acceptance=rep(c('Accepted', 'Not Accepted'), times = 3),
+                 Sex=rep(c('Male', 'Female', 'Joint'), each = 2),
+                 Percentages=c(total_male_acp/total_male*100, total_male_not/total_male*100, total_female_acp/total_female*100, 
+                               total_female_not/total_female*100, total_joint_acp/total_joint*100, total_joint_not/total_joint*100))
+
+library(ggplot2)
+
+ggplot(df_sex, aes(fill=Sex, y=Percentages, x=Acceptance)) + 
+geom_bar(position='dodge', stat='identity') + ggtitle("Percentage of the Harris County Population with\nAccepted/Non-Accepted Mortgage Requests Separated by Sex") + scale_fill_discrete(labels = c("Male", "Joint (married couple)", "Female")) + theme(axis.title.x=element_blank()) + scale_fill_manual(values = c("#6e5a87", "#d9b3da", "#c3e1e9"))
+
+```
+```{r, echo = TRUE}
+# Race
+
+## Not Accepted Subset
+whitehisp_not <- not_accepted[not_accepted$race=="White" & not_accepted$ethnicity=="Hispanic or Latino" ,]
+total_whitehisp_not <- dim(whitehisp_not)[1]
+whitenothisp_not <- not_accepted[not_accepted$race=="White" & not_accepted$ethnicity=="Not Hispanic or Latino" ,]
+total_whitenothisp_not <- dim(whitenothisp_not)[1]
+black_not <- not_accepted[not_accepted$race=="Black or African American",]
+total_black_not <- dim(black_not)[1]
+asian_not <- not_accepted[not_accepted$race=="Asian",]
+total_asian_not <- dim(asian_not)[1]
+hawaii_not <- not_accepted[not_accepted$race=="Native Hawaiian or Other Pacific Islander",]
+total_hawaii_not <- dim(hawaii_not)[1]
+native_not <- not_accepted[not_accepted$race=="American Indian or Alaska Native",]
+total_native_not <- dim(native_not)[1]
+
+## Accepted Subset
+whitehisp_acp <- accepted[accepted$race=="White" & accepted$ethnicity=="Hispanic or Latino" ,]
+total_whitehisp_acp <- dim(whitehisp_acp)[1]
+whitenothisp_acp <- accepted[accepted$race=="White" & accepted$ethnicity=="Not Hispanic or Latino" ,]
+total_whitenothisp_acp <- dim(whitenothisp_acp)[1]
+white_acp <- accepted[accepted$race=="White",]
+total_white_acp <- dim(white_acp)[1]
+black_acp <- accepted[accepted$race=="Black or African American",]
+total_black_acp <- dim(black_acp)[1]
+asian_acp <- accepted[accepted$race=="Asian",]
+total_asian_acp <- dim(asian_acp)[1]
+hawaii_acp <- accepted[accepted$race=="Native Hawaiian or Other Pacific Islander",]
+total_hawaii_acp <- dim(hawaii_acp)[1]
+native_acp <- accepted[accepted$race=="American Indian or Alaska Native",]
+total_native_acp <- dim(native_acp)[1]
+
+```
+
+```{r, echo = TRUE}
+df_race <- data.frame(Acceptance=rep(c('Accepted', 'Not Accepted'), times = 6),
+                 Race=rep(c('White & Hispanic or Latino', 'White & Not Hispanic or Latino', 'Black or African American', 'Asian',
+                            'Native Hawaiian or Other Pacific Islander', 'American Indian or Alaska Native'), each = 2),
+                 Percentages=c(total_whitehisp_acp/total_white_hisp*100, total_whitehisp_not/total_white_hisp*100, 
+                               total_whitenothisp_acp/total_white_nothisp*100, total_whitenothisp_not/total_white_nothisp*100, 
+                               total_black_acp/total_black*100, total_black_not/total_black*100, total_asian_acp/total_asian*100,
+                               total_asian_not/total_asian*100, total_hawaii_acp/total_hawaii*100, total_hawaii_not/total_hawaii*100,
+                               total_native_acp/total_native*100, total_native_not/total_native*100))
+
+ggplot(df_race, aes(fill=Race, y=Percentages, x=Acceptance)) + 
+geom_bar(position='dodge', stat='identity') + ggtitle("Percentage of the Harris County Population with\nAccepted/Non-Accepted Mortgage Requests Separated by Race/Ethnicity") + theme(axis.title.x=element_blank()) + scale_fill_manual(values = c("#6e5a87", "#a487b1", "#d9b3da", "#476b91", "#85a6bd", "#c3e1e9"))
+
+```
+```{r, echo = TRUE}
+# Rejected Subset
+rejected <- subset(track, track$accepted==0)
+total_whitehisp_rej <- dim(rejected[rejected$race=="White" & rejected$ethnicity=="Hispanic or Latino",])[1]
+total_whitenothisp_rej <- dim(rejected[rejected$race=="White" & rejected$ethnicity=="Not Hispanic or Latino",])[1]
+total_black_rej <- dim(rejected[rejected$race=="Black or African American",])[1]
+total_asian_rej <- dim(rejected[rejected$race=="Asian",])[1]
+total_hawaii_rej <- dim(rejected[rejected$race=="Native Hawaiian or Other Pacific Islander",])[1]
+total_native_rej <- dim(rejected[rejected$race=="American Indian or Alaska Native",])[1]
+
+# Rejected w Reason Other Subset
+reason_other <- subset(track, track$denial_reason=="Other")
+total_whitehisp_other <- dim(reason_other[reason_other$race=="White" & reason_other$ethnicity=="Hispanic or Latino",])[1]
+total_whitenothisp_other <- dim(reason_other[reason_other$race=="White" & reason_other$ethnicity=="Not Hispanic or Latino",])[1]
+total_black_other <- dim(reason_other[reason_other$race=="Black or African American",])[1]
+total_asian_other <- dim(reason_other[reason_other$race=="Asian",])[1]
+total_hawaii_other <- dim(reason_other[reason_other$race=="Native Hawaiian or Other Pacific Islander",])[1]
+total_native_other <- dim(reason_other[reason_other$race=="American Indian or Alaska Native",])[1]
+
+```
+
+```{r, echo = TRUE}
+df_other <- data.frame(Race=c('White &\nHispanic\nor Latino', 'White &\nNot Hispanic\nor Latino', 'Black or\nAfrican American', 'Asian',
+                            'Native Hawaiian\nor Other\nPacific Islander', 'American Indian\nor Alaska Native'),
+                 Percentages=c(total_whitehisp_other/total_whitehisp_rej*100, total_whitenothisp_other/total_whitenothisp_rej*100, 
+                               total_black_other/total_black_rej*100, total_asian_other/total_asian_rej*100, 
+                               total_hawaii_other/total_hawaii_rej*100, total_native_other/total_native_rej*100))
+
+ggplot(df_other, aes(y=Percentages, x=Race)) + 
+geom_bar(position='dodge', stat='identity', fill=c("#85a6bd", "#c3e1e9", "#d9b3da", "#a487b1", "#476b91", "#6e5a87")) + ggtitle("Percentage of the Harris County Population Not Accepted for\nMortgage Requests with a Reason Of Other Separated by Race/Ethnicity")
+```
+
+
+```{r, echo = TRUE}
+# Logistic Regression
+
+trackdf <- data.frame(track)
+glm.fit <- glm(accepted ~ income, data=trackdf, family="binomial")
+summary(glm.fit)
+anova(glm.fit)
+
+```
