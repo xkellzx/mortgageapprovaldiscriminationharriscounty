@@ -1,4 +1,4 @@
-# mortgageapprovaldiscriminationharriscounty
+# Rice Datathon'22 "Game of Loans"
 Created by Kelly Zeng, Didi Zhou, Lizeth Mendoza, Mary Mikos
 
 Link to data used in this project:
