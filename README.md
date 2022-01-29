@@ -1,5 +1,6 @@
 # "Game of Loans"
-Rice Datathon 2022 /n
+Project Repository for Rice Datathon 2022 
+
 Created by Kelly Zeng, Didi Zhou, Lizeth Mendoza, Mary Mikos
 
 Link to data used in this project:
